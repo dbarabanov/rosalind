@@ -50,3 +50,36 @@ func TranscribeRna(dna string) (rna string) {
 	}
 	return string(rna_bytes)
 }
+
+//The reverse complement of a DNA string s is the string sc formed by reversing the symbols of s, then taking the complement of each symbol (e.g., the reverse complement of "GTCA" is "TGAC").
+//
+//Given: A DNA string s of length at most 1000 bp.
+//
+//Return: The reverse complement sc of s.
+//
+//Sample Dataset
+//
+//AAAACCCGGT
+//Sample Output
+//
+//ACCGGGTTTT
+func ReverseComplement(dna string) (reverse_complement string) {
+
+	f_reverse := func(dna []byte) (reversed []byte) {
+		reversed = make([]byte, len(dna))
+		for i, dna_byte := range dna {
+			reversed[len(dna)-i-1] = dna_byte
+		}
+		return reversed
+	}
+
+	f_complement := func(dna []byte) (complement []byte) {
+		complement_map := map[byte]byte{'A': 'T', 'C': 'G', 'G': 'C', 'T': 'A'}
+		complement = make([]byte, len(dna))
+		for i, dna_byte := range dna {
+			complement[i] = complement_map[dna_byte]
+		}
+		return complement
+	}
+	return string(f_reverse(f_complement([]byte(dna))))
+}
