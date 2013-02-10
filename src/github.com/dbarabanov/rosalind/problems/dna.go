@@ -31,3 +31,17 @@ func Count_nucleotides(dna_string string) (counts string) {
 	var result = fmt.Sprintf("%v", out)
 	return result[1 : len(result)-1]
 }
+
+type StringIterator func() (letter byte, ok bool)
+
+func MakeStringIterator(s string) StringIterator {
+	i := -1
+	var letters = []byte(s)
+	return func() (byte, bool) {
+		for i+1 < len(letters) {
+			i++
+			return s[i], true
+		}
+		return 0, false
+	}
+}
