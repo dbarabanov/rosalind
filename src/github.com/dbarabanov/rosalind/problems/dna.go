@@ -1,9 +1,11 @@
-//Problem
-//
-//A string is simply an ordered collection of symbols selected from some alphabet and formed into a word; the length of a string is the number of symbols that it contains.
-//
-//An example of a length 21 DNA string (whose alphabet contains the symbols 'A', 'C', 'G', and 'T') is "ATGCTTCAGAAAGGTCTTACG."
-//
+package problems
+
+import (
+	"fmt"
+	//	"github.com/dbarabanov/rosalind/util"
+	"strings"
+)
+
 //Given: A DNA string s of length at most 1000 nt.
 //
 //Return: Four integers (separated by spaces) counting the respective number of times that the symbols 'A', 'C', 'G', and 'T' occur in s.
@@ -14,14 +16,6 @@
 //Sample Output
 //
 //20 12 17 21
-
-package problems
-
-import (
-	"fmt"
-	"strings"
-)
-
 func CountNucleotides(dna_string string) (counts string) {
 	var seps = [...]string{"A", "C", "G", "T"}
 	var out [4]int
@@ -32,16 +26,27 @@ func CountNucleotides(dna_string string) (counts string) {
 	return result[1 : len(result)-1]
 }
 
-type StringIterator func() (letter byte, ok bool)
-
-func MakeStringIterator(s string) StringIterator {
-	i := -1
-	var letters = []byte(s)
-	return func() (byte, bool) {
-		for i+1 < len(letters) {
-			i++
-			return s[i], true
+//Given a DNA string t corresponding to a coding strand, its transcribed RNA string u is formed by replacing all occurrences of 'T' in t with 'U' in u.
+//
+//Given: A DNA string t having length at most 1000 nt.
+//
+//Return: The transcribed RNA string of t.
+//
+//Sample Dataset
+//
+//GATGGAACTTGACTACGTAAATT
+//Sample Output
+//
+//GAUGGAACUUGACUACGUAAAUU
+func TranscribeRna(dna string) (rna string) {
+	dna_bytes := []byte(dna)
+	rna_bytes := make([]byte, len(dna_bytes))
+	for i, dna_byte := range dna_bytes {
+		if dna_byte == byte('T') {
+			rna_bytes[i] = byte('U')
+		} else {
+			rna_bytes[i] = dna_byte
 		}
-		return 0, false
 	}
+	return string(rna_bytes)
 }
