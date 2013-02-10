@@ -22,7 +22,7 @@ import (
 	"strings"
 )
 
-func Count_nucleotides(dna_string string) (counts string) {
+func CountNucleotides(dna_string string) (counts string) {
 	var seps = [...]string{"A", "C", "G", "T"}
 	var out [4]int
 	for i, sep := range seps {

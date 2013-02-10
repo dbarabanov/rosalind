@@ -7,7 +7,7 @@ import (
 
 func main() {
 	fmt.Printf("in main\n")
-	fmt.Printf("%v\n", problems.Count_nucleotides("AT"))
+	fmt.Printf("%v\n", problems.CountNucleotides("AT"))
 	iter := problems.MakeStringIterator("ATCGT")
 	var counts = map[byte]int{}
 	for {
