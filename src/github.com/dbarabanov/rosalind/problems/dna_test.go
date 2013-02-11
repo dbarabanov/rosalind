@@ -1,7 +1,7 @@
 package problems
 
 import (
-	//	"fmt"
+//	"fmt"
 	"testing"
 )
 
@@ -36,3 +36,9 @@ func TestReverseComplement(t *testing.T) {
 	}
 }
 
+func TestEncodeProtein(t *testing.T) {
+	var in, out = "AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGGUGA", "MAMAPRTEINSTRING"
+	if x := EncodeProtein(in); x != out {
+		t.Errorf("EncodeProtein(%v) = %v, want %v", in, x, out)
+	}
+}

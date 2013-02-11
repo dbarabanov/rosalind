@@ -2,7 +2,7 @@ package problems
 
 import (
 	"fmt"
-	//	"github.com/dbarabanov/rosalind/util"
+	"github.com/dbarabanov/rosalind/util"
 	"strings"
 )
 
@@ -82,4 +82,41 @@ func ReverseComplement(dna string) (reverse_complement string) {
 		return complement
 	}
 	return string(f_reverse(f_complement([]byte(dna))))
+}
+
+//The 20 commonly occurring amino acids are abbreviated by using 20 letters from the English alphabet (all letters except for B, J, O, U, X, and Z). Protein strings are constructed from these 20 symbols. Henceforth, the term genetic string will incorporate protein strings along with DNA strings and RNA strings.
+//
+//The RNA codon table dictates the details regarding the encoding of specific codons into the amino acid alphabet.
+//
+//Given: An RNA string s corresponding to a strand of mRNA (of length at most 10 kbp).
+//
+//Return: The protein string encoded by s.
+//
+//Sample Dataset
+//
+//AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGGUGA
+//Sample Output
+//
+//MAMAPRTEINSTRING
+func EncodeProtein(rna_string string) (protein_string string) {
+	CODON_LENGTH := 3
+	protein_index := 0
+	codon_index := 0
+	rna := []byte(rna_string)
+	protein := make([]byte, len(rna)/CODON_LENGTH)
+	var codon = make([]byte, CODON_LENGTH, CODON_LENGTH)
+	for _, letter := range rna {
+		codon[codon_index] = letter
+		codon_index++
+		if codon_index >= 3 {
+			rna_letter := util.CodonMap[string(codon)]
+			if rna_letter == 0 {
+				break
+			}
+			protein[protein_index] = rna_letter
+			protein_index++
+			codon_index = 0
+		}
+	}
+	return string(protein[:protein_index])
 }
