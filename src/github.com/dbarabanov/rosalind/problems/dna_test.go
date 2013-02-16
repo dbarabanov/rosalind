@@ -1,7 +1,7 @@
 package problems
 
 import (
-//	"fmt"
+	//	"fmt"
 	"testing"
 )
 
@@ -40,5 +40,33 @@ func TestEncodeProtein(t *testing.T) {
 	var in, out = "AUGGCCAUGGCGCCCAGAACUGAGAUCAAUAGUACCCGUAUUAACGGGUGA", "MAMAPRTEINSTRING"
 	if x := EncodeProtein(in); x != out {
 		t.Errorf("EncodeProtein(%v) = %v, want %v", in, x, out)
+	}
+}
+
+func TestRnaSplice(t *testing.T) {
+	var in = `>Rosalind_10
+ATGGTCTACATAGCTGACAAACAGCACGTAGCAATCGGTCGAATCTCGAGAGGCATATGGTCACATGATCGGTCGAGCGTGTTTCAAAGTTTGCGCCTAG
+Rosalind_12
+ATCGGTCGAA
+Rosalind_15
+ATCGGTCGAGCGTGT
+`
+	var out = "MVYIADKQHVASREAYGHMFKVCA"
+	if x := RnaSplice(in); x != out {
+		t.Errorf("RnaSplice(%v) = %v, want %v", in, x, out)
+	}
+}
+
+func TestSPLC(t *testing.T) {
+	var in = `>Rosalind_10
+ATGGTCTACATAGCTGACAAACAGCACGTAGCAATCGGTCGAATCTCGAGAGGCATATGGTCACATGATCGGTCGAGCGTGTTTCAAAGTTTGCGCCTAG
+Rosalind_12
+ATCGGTCGAA
+Rosalind_15
+ATCGGTCGAGCGTGT
+`
+	var out = "MVYIADKQHVASREAYGHMFKVCA"
+	if x := RnaSplice(in); x != out {
+		t.Errorf("RnaSplice(%v) = %v, want %v", in, x, out)
 	}
 }

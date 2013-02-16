@@ -80,18 +80,21 @@ func AppendEdge(node *Node, newEdge *Edge) {
 }
 
 func addSuffix(node *Node, suffix []rune, position int) {
-	fmt.Printf("adding suffix %v\n", string(suffix))
+	//	fmt.Printf("adding suffix %v\n", string(suffix))
 	for _, edge := range node.Edges {
 		//		fmt.Printf("%v\n", edge)
 		if edge.Label[0] == suffix[0] {
-			fmt.Printf("matching edge for %v: %v\n", string(suffix), string(edge.Label))
+			//			fmt.Printf("matching edge for %v: %v\n", string(suffix), string(edge.Label))
 			for i := range edge.Label {
 				//				fmt.Printf("index: %v. edge.Label: %v\n", i, string(edge.Label[i]))
+				//				fmt.Printf("index: %v. edge.Label: %v\n", i, string(edge.Label))
+				//				fmt.Printf("index: %v. suffix: %v\n", i, string(suffix))
 				if edge.Label[i] != suffix[i] {
 					insertNode(edge, i, suffix[i:], position)
 					return
 				}
 			}
+			addSuffix(edge.End, suffix[len(edge.Label):], position)
 			return
 		}
 	}
@@ -100,7 +103,7 @@ func addSuffix(node *Node, suffix []rune, position int) {
 }
 
 func insertNode(edge *Edge, index int, suffix []rune, position int) {
-	fmt.Printf("inserting suffix %v at index %v of %v\n", string(suffix), index, string(edge.Label))
+//	fmt.Printf("inserting suffix %v at index %v of %v\n", string(suffix), index, string(edge.Label))
 	firstPart := &Edge{edge.Label[:index], edge.Start, &Node{nil, nil}}
 	AppendEdge(firstPart.End, &Edge{suffix, firstPart.End, &Node{nil, &NodeData{position}}})
 	AppendEdge(firstPart.End, &Edge{edge.Label[index:], firstPart.End, edge.End})
@@ -120,22 +123,22 @@ func findSubstrings(node *Node, pattern []rune) (indexes map[int]struct{}) {
 	index := 0
 	var activeEdge *Edge = nil
 	for _, edge := range node.Edges {
-		fmt.Println(string(edge.Label))
+		//fmt.Println(string(edge.Label))
 		if edge.Label[0] == pattern[index] {
 			activeEdge = edge
 			break
 		}
 	}
 	if activeEdge != nil {
-		fmt.Printf("activeEdge: %v. index: %v\n", string(activeEdge.Label), index)
+		//fmt.Printf("activeEdge: %v. index: %v\n", string(activeEdge.Label), index)
 		for _, l := range activeEdge.Label {
 			if index >= len(pattern) {
-				fmt.Println("A")
+				//fmt.Println("A")
 				//				TraverseNodes(activeEdge.End, indexes)
 				return collectLeafsBelow(activeEdge.End)
 			}
 			if pattern[index] != l {
-				fmt.Println("B")
+				//fmt.Println("B")
 				return indexes
 			}
 			index++
@@ -183,9 +186,9 @@ func Walker(n *Node) <-chan int {
 }
 
 func TraverseNodes(node *Node, indexes []int) {
-	fmt.Printf("Traversing node %v\n", node.NodeData)
+	//	fmt.Printf("Traversing node %v\n", node.NodeData)
 	if len(node.Edges) <= 0 {
-		fmt.Printf("Leaf %v\n", node.NodeData)
+		//fmt.Printf("Leaf %v\n", node.NodeData)
 		AppendInt(indexes, node.NodeData.LeafIndex)
 		//		return indexes
 	} else {
