@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/dbarabanov/rosalind/suffix_tree"
 	"github.com/dbarabanov/rosalind/util"
+	"io/ioutil"
 	"strings"
 )
 
@@ -139,38 +140,63 @@ func EncodeProtein(rna_string string) (protein_string string) {
 //Sample Output
 //
 //MVYIADKQHVASREAYGHMFKVCA
+func SpliceRna(filename string) (protein string) {
+	dna, introns, err := readSplcInput(filename)
+	if err != nil {
+		panic("failed to read input from " + filename)
+	}
+	st := suffix_tree.ConstructSuffixTree(dna)
+	intronOffsets := make(map[int]int)
+	for _, intron := range introns {
+		for pos := range suffix_tree.FindSubstrings(st, intron) {
+			intronOffsets[pos] = len(intron)
+		}
+	}
+	exons := make([]rune, len(dna))
+	intronEnd := 0
+	inIntron := false
+	l := 0
+	for i, r := range dna {
+		if length, present := intronOffsets[i]; present && i+length >= intronEnd {
+			intronEnd = length + i
+			inIntron = true
+		}
+		if i >= intronEnd {
+			inIntron = false
+		}
+		if !inIntron {
+			exons[l] = r
+			l++
+		}
+	}
+	//	fmt.Printf("dna  : %v\n", string(dna))
+	//	fmt.Printf("exons: %v\n", string(exons))
+	retVal := EncodeProtein(TranscribeRna(string(exons)))
+	//	fmt.Printf("retVal: %v\n", string(retVal))
+	return retVal
+}
+
 func RnaSplice(input string) (protein string) {
-	//    var lines = [][]rune
-	//	var currentLine []rune
 	var lineBreaks []int
 	for i, r := range input {
 		if r == '\n' {
 			lineBreaks = util.AppendInt(lineBreaks, i)
 		}
 	}
-	//	fmt.Println(lineBreaks)
 	dna := input[lineBreaks[0]+1 : lineBreaks[1]]
-	fmt.Println(dna)
+	//	fmt.Println(dna)
 	st := suffix_tree.ConstructSuffixTree(dna)
-	//	var matches []int
-	//	for k, _ := range suffix_tree.FindSubstrings(st, "AT") {
-	//		matches = util.AppendInt(matches, k)
-	//	}
-	//	fmt.Printf("matches: %v\n", matches)
-	//	fmt.Println(suffix_tree.FindSubstrings(st, "AT"))
-
-	//	var intronOffsets []int
 	intronOffsets := make(map[int]int)
 	intronStart := lineBreaks[1] + 1
 	for i, lineBreak := range lineBreaks[2:] {
 		if i%2 == 1 {
-			fmt.Println(input[intronStart:lineBreak])
+			//			fmt.Println(input[intronStart:lineBreak])
 			//			fmt.Println(suffix_tree.FindSubstrings(st, input[intronStart:lineBreak]))
 			for k, _ := range suffix_tree.FindSubstrings(st, input[intronStart:lineBreak]) {
 				//				intronOffsets = util.AppendInt(intronOffsets, k)
 				intronOffsets[k] = lineBreak - intronStart
 			}
-			fmt.Printf("intronOffsets: %v\n", intronOffsets)
+			//fmt.Printf("intronOffsets: %v\n", intronOffsets)
 		}
 		intronStart = lineBreak + 1
 	}
@@ -183,7 +209,7 @@ func RnaSplice(input string) (protein string) {
 		if length, present := intronOffsets[i]; present && i+length >= intronEnd {
 			//intronEnd = intronOffsets[i]
 			intronEnd = length + i
-			fmt.Printf("in new intron: %v\n", intronEnd)
+			//fmt.Printf("in new intron: %v\n", intronEnd)
 			inIntron = true
 		}
 		if i >= intronEnd {
@@ -194,11 +220,37 @@ func RnaSplice(input string) (protein string) {
 			l++
 		}
 	}
-	fmt.Printf("dna  : %v\n", string(dna))
-	fmt.Printf("exons: %v\n", string(exons))
+	//fmt.Printf("dna  : %v\n", string(dna))
+	//fmt.Printf("exons: %v\n", string(exons))
 	//return TranscribeRna(string(exons))
 	retVal := EncodeProtein(TranscribeRna(string(exons)))
-	fmt.Printf("retVal: %v\n", string(retVal))
-	return retVal 
+	//	fmt.Printf("retVal: %v\n", string(retVal))
+	return retVal
 	//	return input
+}
+
+func readSplcInput(filename string) (dna string, introns []string, err error) {
+	//	content, err := ioutil.ReadFile("test_data/SPLC_in_big.txt")
+	content, err := ioutil.ReadFile(filename)
+	if err != nil {
+		fmt.Println(err)
+		return dna, nil, err
+	}
+	lines := strings.Split(string(content), "\n")
+	dna = ""
+	isDnaRead := false
+	for _, line := range lines[1:] {
+		if len(line) > 0 && line[0] == '>' {
+			isDnaRead = true
+			continue
+		}
+		if !isDnaRead {
+			dna += line
+		} else {
+			introns = append(introns, line)
+		}
+	}
+	//	fmt.Println(dna)
+	//	fmt.Println(introns)
+	return dna, introns, nil
 }

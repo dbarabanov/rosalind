@@ -24,14 +24,14 @@ type Edge struct {
 }
 
 func ConstructSuffixTree(s string) (t *SuffixTree) {
-	fmt.Println("constructing suffix tree from", s)
+//	fmt.Println("constructing suffix tree from", s)
 	root := &Node{nil, nil}
 	st := &SuffixTree{root}
 	text := []rune(s + Terminator)
 	for i := range text {
 		addSuffix(root, text[i:], i)
 	}
-	Print(st)
+	//	Print(st)
 	return st
 }
 
@@ -103,7 +103,7 @@ func addSuffix(node *Node, suffix []rune, position int) {
 }
 
 func insertNode(edge *Edge, index int, suffix []rune, position int) {
-//	fmt.Printf("inserting suffix %v at index %v of %v\n", string(suffix), index, string(edge.Label))
+	//	fmt.Printf("inserting suffix %v at index %v of %v\n", string(suffix), index, string(edge.Label))
 	firstPart := &Edge{edge.Label[:index], edge.Start, &Node{nil, nil}}
 	AppendEdge(firstPart.End, &Edge{suffix, firstPart.End, &Node{nil, &NodeData{position}}})
 	AppendEdge(firstPart.End, &Edge{edge.Label[index:], firstPart.End, edge.End})
@@ -113,7 +113,7 @@ func insertNode(edge *Edge, index int, suffix []rune, position int) {
 }
 
 func FindSubstrings(st *SuffixTree, substring string) (indexes map[int]struct{}) {
-	if st == nil || st.root == nil {
+	if st == nil || st.root == nil || len(substring) <= 0{
 		return indexes
 	}
 	return findSubstrings(st.root, []rune(substring))

@@ -2,6 +2,7 @@ package problems
 
 import (
 	//	"fmt"
+	"io/ioutil"
 	"testing"
 )
 
@@ -57,16 +58,28 @@ ATCGGTCGAGCGTGT
 	}
 }
 
-func TestSPLC(t *testing.T) {
-	var in = `>Rosalind_10
-ATGGTCTACATAGCTGACAAACAGCACGTAGCAATCGGTCGAATCTCGAGAGGCATATGGTCACATGATCGGTCGAGCGTGTTTCAAAGTTTGCGCCTAG
-Rosalind_12
-ATCGGTCGAA
-Rosalind_15
-ATCGGTCGAGCGTGT
-`
-	var out = "MVYIADKQHVASREAYGHMFKVCA"
-	if x := RnaSplice(in); x != out {
-		t.Errorf("RnaSplice(%v) = %v, want %v", in, x, out)
+func TestSplc(t *testing.T) {
+	//	content, err := ioutil.ReadFile("test_data/SPLC_in_big.txt")
+	content, err := ioutil.ReadFile("test_data/SPLC_in.txt")
+	if err != nil {
+		t.Errorf(err.Error())
+	} else {
+		//	lines := strings.Split(string(content), "\n")
+		//in := content
+		in := string(content)
+		//		t.Errorf(in)
+		var out = "MVYIADKQHVASREAYGHMFKVCA"
+		if x := RnaSplice(in); x != out {
+			t.Errorf("RnaSplice(%v) = %v, want %v", in, x, out)
+		}
+	}
+}
+
+func TestSpliceRna(t *testing.T) {
+	//	var out, in = "MVYIADKQHVASREAYGHMFKVCA", "test_data/SPLC_in.txt"
+	//	var out, in = "MQCFTHPVEPKLGGVRLRWEEMSQRQVDSLKDCGTLFDGGALYLHATCARSLPEKHREDTILPVCRPGLAEQVIGFCPGANYAHFVSAAGCSQPGSGISTLTGRYGYRISGHNGTGQNTAMRFPLTIVGIHKNRYLSYRTLSVMQHTYTVFSSRGNAYLHLLVVHTSTGLNENSRRGRELSSGRP", "test_data/SPLC_in_big.txt"
+	var out, in = "MAAGNLAVTRSKSVALPWHLSLPSIVSYENRKWRMVVIALSSLNAQVDLGVSIMDRGTVNVPLAVDNTILQLRCLLSSFSGPDHGFRPATAHISGLDIRPGLKHCYSSSHVKSGIGHQRLHSSLTQCSPGEKPVRVGRIPGVESDSWVLRIHVEMCTLLGYVMGRRGVHLEKIQRVNGYISVQR", "test_data/SPLC_in_big2.txt"
+	if x := SpliceRna(in); x != out {
+		t.Errorf("SpliceRna(%v) = %v, want %v", in, x, out)
 	}
 }
