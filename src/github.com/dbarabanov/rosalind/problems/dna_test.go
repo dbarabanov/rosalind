@@ -83,3 +83,13 @@ func TestSpliceRna(t *testing.T) {
 		t.Errorf("SpliceRna(%v) = %v, want %v", in, x, out)
 	}
 }
+
+func TestProbDominant(t *testing.T) {
+	//var k, m, n = 2, 2, 2
+	var k, m, n = 26, 23, 29
+
+	var out = 0.78333
+	if x := probDominant(k, m, n); x != out {
+		t.Errorf("probDominant(%v, %v, %v) = %v, want %v", k, m, n, x, out)
+	}
+}

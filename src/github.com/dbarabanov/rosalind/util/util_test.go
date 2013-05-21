@@ -23,3 +23,10 @@ func TestStringIterator(t *testing.T) {
 		}
 	}
 }
+
+func TestRound(t *testing.T) {
+	var in, out = 4.23433333, 4.23
+	if x := Round(in,2); x != out {
+		t.Errorf("Round(%v) = %v, want %v", in, x, out)
+	}
+}
