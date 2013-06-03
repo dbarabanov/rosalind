@@ -85,11 +85,20 @@ func TestSpliceRna(t *testing.T) {
 }
 
 func TestProbDominant(t *testing.T) {
-	//var k, m, n = 2, 2, 2
-	var k, m, n = 26, 23, 29
+	var k, m, n = 2, 2, 2
+	//var k, m, n = 26, 23, 29
 
 	var out = 0.78333
 	if x := probDominant(k, m, n); x != out {
 		t.Errorf("probDominant(%v, %v, %v) = %v, want %v", k, m, n, x, out)
+	}
+}
+
+func TestRabbits(t *testing.T) {
+	var months, litter = 5, 3
+
+	var out = uint64(19)
+	if rabbits := rabbits(months, litter); rabbits != out {
+		t.Errorf("rabbits(%v, %v) = %v, want %v", months, litter, rabbits, out)
 	}
 }

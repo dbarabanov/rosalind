@@ -37,6 +37,7 @@ nosetests.xml
 # Go
 pkg/*
 bin/*
+src/github.com/dbarabanov/rosalind/problems/problems.test
 
 # Vim
 *.swp
