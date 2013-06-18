@@ -1,7 +1,9 @@
 package util
 
 import (
+	"io/ioutil"
 	"math"
+	"strings"
 )
 
 type StringIterator func() (letter byte, ok bool)
@@ -46,4 +48,28 @@ func Round(x float64, prec int) float64 {
 	}
 
 	return rounder / pow
+}
+
+func ReadFasta(filename string) map[string]string {
+	content, err := ioutil.ReadFile(filename)
+	if err != nil {
+		panic("could not open file: " + filename)
+	}
+	out := make(map[string]string)
+	seq := ""
+	id := ""
+	lines := strings.Split(string(content), "\n")
+	for _, line := range lines {
+		if len(line) > 0 && line[0] == '>' {
+			if seq != "" {
+				out[id] = seq
+				seq = ""
+			}
+			id = line[1:]
+		} else {
+			seq = seq + line
+		}
+	}
+    out[id] = seq
+	return out
 }

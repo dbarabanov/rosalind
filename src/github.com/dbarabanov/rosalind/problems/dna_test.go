@@ -102,3 +102,38 @@ func TestRabbits(t *testing.T) {
 		t.Errorf("rabbits(%v, %v) = %v, want %v", months, litter, rabbits, out)
 	}
 }
+
+func TestProteinWeight(t *testing.T) {
+	protein := "SKADYEK"
+
+	var out = 821.392
+	if x := proteinWeight(protein); x != out {
+		t.Errorf("proteinWeight(%v) = %v, want %v", protein, x, out)
+	}
+}
+
+func TestOverlapGraph(t *testing.T) {
+	//input := `>Rosalind_0498
+	//AAATAAA
+	//>Rosalind_2391
+	//AAATTTT
+	//>Rosalind_2323
+	//TTTTCCC
+	//>Rosalind_0442
+	//AAATCCC
+	//>Rosalind_5013
+	//GGGTGGG`
+	filename := "test_data/overlapGraphs.input"
+	var out = `Rosalind_0498 Rosalind_0442
+Rosalind_0498 Rosalind_2391
+Rosalind_2391 Rosalind_2323
+`
+
+	//var out = make(map[string]struct{})
+	//out["Rosalind_0498 Rosalind_2391"] = struct{}{}
+	//out["Rosalind_0498 Rosalind_0442"] = struct{}{}
+	//out["Rosalind_2391 Rosalind_2323"] = struct{}{}
+	if x := overlapGraph(filename); x != out {
+		t.Errorf("overlapGraph(%v) = %v, want %v", filename, x, out)
+	}
+}
