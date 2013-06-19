@@ -137,3 +137,11 @@ Rosalind_2391 Rosalind_2323
 		t.Errorf("overlapGraph(%v) = %v, want %v", filename, x, out)
 	}
 }
+
+func TestCompleteTree(t *testing.T) {
+	filename := "test_data/completeTree.input"
+	var out = 3
+	if x := completeTree(filename); x != out {
+		t.Errorf("completeTree(%v) = %v, want %v", filename, x, out)
+	}
+}

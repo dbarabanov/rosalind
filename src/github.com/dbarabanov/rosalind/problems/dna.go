@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	//"math"
 	"sort"
+	"strconv"
 	"strings"
 )
 
@@ -389,4 +390,110 @@ func overlapGraph(filename string) (graph string) {
 		out += k + "\n"
 	}
 	return out
+}
+
+//An undirected graph is connected if there is a path connecting any two nodes. A tree is a connected (undirected) graph containing no cycles; this definition forces the tree to have a branching structure organized around a central core of nodes, just like its living counterpart. See Figure 2.
+
+//We have already grown familiar with trees in “Mendel's First Law”, where we introduced the probability tree diagram to visualize the outcomes of a random variable.
+
+//In the creation of a phylogeny, taxa are encoded by the tree's leaves, or nodes having degree 1. A node of a tree having degree larger than 1 is called an internal node.
+
+//Given: A positive integer n (n≤1000) and an adjacency list corresponding to a graph on n nodes that contains no cycles.
+
+//Return: The minimum number of edges that can be added to the graph to produce a tree.
+
+//Sample Dataset
+
+//10
+//1 2
+//2 8
+//4 10
+//5 9
+//6 10
+//7 9
+//Sample Output
+
+//3
+func completeTree(filename string) (edge_count int) {
+	content, err := ioutil.ReadFile(filename)
+	if err != nil {
+		panic("could not open file: " + filename)
+	}
+	type edge struct {
+		from string
+		to   string
+	}
+	var edges []edge
+	var freeNodes int
+	var deadClusters int
+	lines := strings.Split(string(content), "\n")
+	//fmt.Printf("lines: %v\n", lines)
+	for i, line := range lines {
+		if i == 0 {
+			freeNodes, err = strconv.Atoi(line)
+		}
+		//fmt.Printf("line: %v\n", line)
+		if len(strings.Split(line, " ")) == 2 {
+			tokens := strings.Split(line, " ")
+			edges = append(edges, edge{tokens[0], tokens[1]})
+			//fmt.Printf("edges: %v\n", edges)
+		}
+	}
+	fmt.Printf("edges: %v\n", edges)
+
+	type cluster struct {
+		size    int
+		members map[string]bool
+	}
+	var clusters []*cluster
+	var firstCluster, secondCluster *cluster
+	for _, edge := range edges {
+		firstCluster, secondCluster = nil, nil
+		for _, cluster := range clusters {
+			if cluster.members[edge.from] {
+				firstCluster = cluster
+			}
+			if cluster.members[edge.to] {
+				secondCluster = cluster
+			}
+		}
+		if firstCluster == nil && secondCluster == nil {
+			freeNodes -= 2
+			newCluster := cluster{2, map[string]bool{edge.from: true, edge.to: true}}
+			clusters = append(clusters, &newCluster)
+		} else if firstCluster == nil {
+			freeNodes -= 1
+			secondCluster.size += 1
+			secondCluster.members[edge.from] = true
+		} else if secondCluster == nil {
+			freeNodes -= 1
+			firstCluster.size += 1
+			firstCluster.members[edge.to] = true
+		} else {
+			var mainCluster, smallCluster *cluster
+			if firstCluster.size >= secondCluster.size {
+				mainCluster = firstCluster
+				smallCluster = secondCluster
+			} else {
+				mainCluster = secondCluster
+				smallCluster = firstCluster
+			}
+			mainCluster.size += smallCluster.size
+			for node := range smallCluster.members {
+				mainCluster.members[node] = true
+			}
+			smallCluster = nil
+			deadClusters++
+		}
+
+		for _, cluster := range clusters {
+			fmt.Printf("%v", cluster)
+		}
+		fmt.Printf("\n")
+		fmt.Printf("freeNodes: %v\n", freeNodes)
+		fmt.Printf("deadClusters: %v\n", deadClusters)
+		fmt.Printf("len(clusters): %v\n", len(clusters))
+	}
+
+	return len(clusters) + freeNodes - deadClusters - 1
 }
