@@ -145,3 +145,31 @@ func TestCompleteTree(t *testing.T) {
 		t.Errorf("completeTree(%v) = %v, want %v", filename, x, out)
 	}
 }
+
+func TestDistancesInTrees(t *testing.T) {
+	//filename := "test_data/distancesInTrees.prod"
+	//t.Fail()
+	filename := "test_data/distancesInTrees.input"
+	var out = "1 2 3 2 3 2 3 2"
+	//var out = "15 7 53 1 25 9 6 2 2 10 9 2 2 43 21 2 18 19 14 30 15 20 11 15 23 10 13 27 26 8 2 2 17 12 22 37 2 1 22"
+	//var out = "15 7 53 48 25 9 6 2 2 10 9 2 2 43 21 2 18 19 14 30 15 20 11 15 23 10 13 27 26 8 2 2 17 12 22 37 2 19 22"
+	if x := distancesInTrees(filename); x != out {
+		t.Errorf("distancesInTrees(%v) = %v, want %v.", filename, x, out)
+	}
+}
+
+func TestConsensusAndProfile(t *testing.T) {
+	filename := "test_data/ConsensusAndProfile.input"
+	var out string
+	content, err := ioutil.ReadFile("test_data/ConsensusAndProfile.out")
+	if err != nil {
+		t.Errorf(err.Error())
+		panic(err.Error())
+	} else {
+		out = string(content)
+	}
+
+	if x := consensusAndProfile(filename); x != out {
+		t.Errorf("consensusAndProfile(%v) = %v, want %v.", filename, x, out)
+	}
+}

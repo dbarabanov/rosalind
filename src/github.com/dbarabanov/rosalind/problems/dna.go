@@ -439,7 +439,7 @@ func completeTree(filename string) (edge_count int) {
 			//fmt.Printf("edges: %v\n", edges)
 		}
 	}
-	fmt.Printf("edges: %v\n", edges)
+	//fmt.Printf("edges: %v\n", edges)
 
 	type cluster struct {
 		size    int
@@ -486,14 +486,254 @@ func completeTree(filename string) (edge_count int) {
 			deadClusters++
 		}
 
-		for _, cluster := range clusters {
-			fmt.Printf("%v", cluster)
-		}
-		fmt.Printf("\n")
-		fmt.Printf("freeNodes: %v\n", freeNodes)
-		fmt.Printf("deadClusters: %v\n", deadClusters)
-		fmt.Printf("len(clusters): %v\n", len(clusters))
+		//for _, cluster := range clusters {
+		//fmt.Printf("%v", cluster)
+		//}
+		//fmt.Printf("\n")
+		//fmt.Printf("freeNodes: %v\n", freeNodes)
+		//fmt.Printf("deadClusters: %v\n", deadClusters)
+		//fmt.Printf("len(clusters): %v\n", len(clusters))
 	}
 
 	return len(clusters) + freeNodes - deadClusters - 1
+}
+
+//Newick format is a way of representing trees even more concisely than using an adjacency list, especially when dealing with trees whose internal nodes have not been labeled.
+
+//First, consider the case of a rooted tree T. A collection of leaves v1,v2,…,vn of T are neighbors if they are all adjacent to some internal node u. Newick format for T is obtained by iterating the following key step: delete all the edges {vi,u} from T and label u with (v1,v2,…,vn)u. This process is repeated all the way to the root, at which point a semicolon signals the end of the tree.
+
+//A number of variations of Newick format exist. First, if a node is not labeled in T, then we simply leave blank the space occupied by the node. In the key step, we can write (v1,v2,…,vn) in place of (v1,v2,…,vn)u if the vi are labeled; if none of the nodes are labeled, we can write (,,…,).
+
+//A second variation of Newick format occurs when T is unrooted, in which case we simply select any internal node to serve as the root of T. A particularly peculiar case of Newick format arises when we choose a leaf to serve as the root.
+
+//Note that there will be a large number of different ways to represent T in Newick format; see Figure 1.
+
+//Given: A collection of n trees (n≤40) in Newick format, with each tree containing at most 200 nodes; each tree Tk is followed by a pair of nodes xk and yk in Tk.
+
+//Return: A collection of n positive integers, for which the kth integer represents the distance between xk and yk in Tk.
+
+//Sample Dataset
+//(cat)dog;
+//dog cat
+
+//(dog,cat);
+//dog cat
+//Sample Output
+
+//1 2
+func distancesInTrees(filename string) (output string) {
+	content, err := ioutil.ReadFile(filename)
+	if err != nil {
+		panic("could not open file: " + filename)
+	}
+	lines := strings.Split(string(content), "\n")
+	//fmt.Printf("lines: %v\n", lines)
+	x, y := "", ""
+	newick := ""
+	readingNewick := true
+	var tokens []string
+	//var distances []string
+	distances := make([]string, 0)
+	for _, line := range lines {
+		if line != "" {
+			//fmt.Printf("line: %v\n", line)
+			if readingNewick {
+				newick += line
+				if line[len(line)-1] == ';' {
+					readingNewick = false
+				}
+			} else {
+				tokens = strings.Split(line, " ")
+				x, y = tokens[0], tokens[1]
+				//fmt.Printf("x, y: %v %v\n", x, y)
+				tokens = nil
+				token := ""
+				for _, symbol := range newick {
+					if symbol == ')' || symbol == '(' || symbol == ',' {
+						if token != "" {
+							tokens = append(tokens, token)
+							token = ""
+						}
+						tokens = append(tokens, string(symbol))
+					} else if symbol == ';' {
+						if token != "" {
+							tokens = append(tokens, token)
+							token = ""
+						}
+						//fmt.Printf("newick: %v\n", newick)
+						//fmt.Printf("tokens: %v\n", tokens)
+						break
+					} else if symbol != ' ' {
+						token += string(symbol)
+					}
+				}
+				//fmt.Printf("tokens: %v\n", tokens)
+				//fmt.Printf("x, y: %v %v\n", x, y)
+				distances = append(distances, distanceInNewickTree(tokens, x, y))
+				//fmt.Printf("distances: %v\n", distances)
+				readingNewick = true
+				newick = ""
+			}
+		}
+	}
+	return strings.Join(distances, " ")
+	//return ""
+}
+func distanceInNewickTree(tokens []string, x string, y string) string {
+	if x == y {
+		return "0"
+	}
+	distance := 0
+	depth := 0
+	connectors := make([]int, 0)
+	var peak int
+	started := false
+	var first int
+	//redundands := findredundands(tokens)
+	redundands := make(map[int]bool)
+	for i, token := range tokens {
+		if redundands[i] == true {
+			continue
+		} else if token == "(" {
+			connectors = append(connectors, depth)
+			depth++
+		} else if token == ")" {
+			depth = connectors[len(connectors)-1] + 1
+			connectors = connectors[:len(connectors)-1]
+			if peak >= depth {
+				peak = depth - 1
+			}
+		} else if token == x || token == y {
+			if !started {
+				first = depth
+				peak = depth
+				started = true
+				//fmt.Printf("*****starting. first: %v depth: %v, peak: %v\n", first, depth, peak)
+			} else {
+				//fmt.Printf("first: %v depth: %v, peak: %v\n", first, depth, peak)
+				distance = first + depth - 2*peak
+				break
+			}
+			depth++
+		} else if token == "," {
+			depth = connectors[len(connectors)-1] + 1
+			if peak >= depth {
+				peak = depth - 1
+			}
+		} else {
+			depth++
+			//fmt.Printf("increasing depth to : %v token '%v' y: '%v' \n", depth, token, y)
+		}
+		//fmt.Printf("token: %v depth: %v, connectors: %v\n", token, depth, connectors)
+	}
+	return strconv.Itoa(distance)
+}
+
+func findredundands(tokens []string) map[int]bool {
+	redundands := make(map[int]bool)
+	type brace struct {
+		position  int
+		redundand bool
+	}
+	var braces []brace
+	for i, token := range tokens {
+		if token == "(" {
+			braces = append(braces, brace{i, true})
+		} else if token == ")" {
+			if braces[len(braces)-1].redundand {
+				redundands[braces[len(braces)-1].position] = true
+				redundands[i] = true
+			}
+			braces = braces[:len(braces)-1]
+		} else if token == "," {
+			braces[len(braces)-1].redundand = false
+		}
+		//fmt.Printf("i: %v braces: %v redundands: %v token: '%v'\n", i, braces, redundands, token)
+	}
+	//fmt.Printf("redundands: %v\n", redundands)
+	return redundands
+}
+
+//A matrix is a rectangular table of values divided into rows and columns. An m×n matrix has m rows and n columns. Given a matrix A, we write Ai,j to indicate the value found at the intersection of row i and column j.
+
+//Say that we have a collection of DNA strings, all having the same length n. Their profile matrix is a 4×n matrix P in which P1,j represents the number of times that 'A' occurs in the jth position of one of the strings, P2,j represents the number of times that C occurs in the jth position, and so on (see below).
+
+//A consensus string c is a string of length n formed from our collection by taking the most common symbol at each position; the jth symbol of c therefore corresponds to the symbol having the maximum value in the j-th column of the profile matrix. Of course, there may be more than one most common symbol, leading to multiple possible consensus strings.
+
+//A T C C A G C T
+//G G G C A A C T
+//A T G G A T C T
+//DNA Strings A A G C A A C C
+//T T G G A A C T
+//A T G C C A T T
+//A T G G C A C T
+//A   5 1 0 0 5 5 0 0
+//Profile C   0 0 1 4 2 0 6 1
+//G   1 1 6 3 0 1 0 0
+//T   1 5 0 0 0 1 1 6
+//Consensus   A T G C A A C T
+//Given: A collection of at most 10 DNA strings of equal length (at most 1 kbp) in FASTA format.
+
+//Return: A consensus string and profile matrix for the collection. (If several possible consensus strings exist, then you may return any one of them.)
+
+//Sample Dataset
+
+//>Rosalind_1
+//ATCCAGCT
+//>Rosalind_2
+//GGGCAACT
+//>Rosalind_3
+//ATGGATCT
+//>Rosalind_4
+//AAGCAACC
+//>Rosalind_5
+//TTGGAACT
+//>Rosalind_6
+//ATGCCATT
+//>Rosalind_7
+//ATGGCACT
+//Sample Output
+
+//ATGCAACT
+//A: 5 1 0 0 5 5 0 0
+//C: 0 0 1 4 2 0 6 1
+//G: 1 1 6 3 0 1 0 0
+//T: 1 5 0 0 0 1 1 6
+func consensusAndProfile(filename string) (result string) {
+	reads := util.ReadFasta(filename)
+	//fmt.Printf("reads: %v\n", reads)
+	letters := []rune{'A', 'C', 'G', 'T'}
+
+	var profile map[rune][]int
+	var rowlen int
+	for _, seq := range reads {
+		rowlen = len(seq)
+		if profile == nil {
+			profile = map[rune][]int{'A': make([]int, rowlen), 'T': make([]int, rowlen), 'G': make([]int, rowlen), 'C': make([]int, rowlen)}
+		}
+		for i, l := range seq {
+			profile[l][i]++
+		}
+	}
+
+	var consensus []rune
+	for i := range profile['A'] {
+		var winner rune
+		maxScore := 0
+		for _, k := range letters {
+			if profile[k][i] >= maxScore {
+				winner = k
+				maxScore = profile[k][i]
+			}
+		}
+		consensus = append(consensus, winner)
+	}
+
+	result = string(consensus) + "\n"
+	for _, l := range letters {
+		result += string(l) + ": " + strings.Trim(fmt.Sprintf("%v", profile[l]), "[]") + "\n"
+	}
+	//ioutil.WriteFile("test_data/consensusAndProfile.out", []byte(result), 0644)
+
+	return result
 }

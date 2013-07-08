@@ -41,3 +41,6 @@ src/github.com/dbarabanov/rosalind/problems/problems.test
 
 # Vim
 *.swp
+
+# MAC
+.DS_Store

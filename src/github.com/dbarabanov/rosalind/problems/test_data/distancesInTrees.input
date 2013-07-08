@@ -1,0 +1,28 @@
+(cat)dog;
+dog cat
+
+(dog,cat);
+dog cat
+
+(C, D, (A, B));
+C B
+
+(C, D, (A, B));
+C D
+
+(A, (D, C), B);
+A C
+
+(A, (D, C), B);
+A B
+
+(((A, B), C))D;
+A D
+
+(((A, B),
+C))D;
+A B
+
+
+((Acanthosaura_spinifera,Dipsosaurus_molurus),(((((((((Acipenser_vastus,(Mabuya_fuliginosus,Seokia_doriae)),Pelodytes_auriculatus),((Aegypius_mnemosyne,Oceanodroma_brongersmai),((((((Anthropoidae_rufus,(Tadorna_eburnea,Uncia_peregusna)),Leiolepis_fasciolata),Chen_piscator),Rangifer_lesueurii),(Chettussia_longicollis,Grammostola_subruficollis)),Certhia_vermiculatus))),Colaeus_proteus),Turdus_calamita),Lycodon_vitulina),Triturus_trianguligerus),(((((((((((((((Alcedo_parreyssi,Myotis_aristotelis),Oxyura_crassidens),Pseudemys_fusca),Perdix_leucotus),(((Cygnopsis_duplex,Onychodactylus_laticauda),(Gyps_vitticeps,Pelecanus_iguana)),(Grammostola_quadrivirgata,Monachus_canus))),(Falcipennis_saiga,Hydrosaurus_acanthinura)),Parnassius_ruthveni),((((((Alectoris_eburnea,Phasianus_longicaudata),((Eunectes_unicus,Sericinus_nebrius),Megophrys_bedriagai)),Lutra_marmoratus),((Elseya_clarus,Phalaropus_nupta),Motacilla_gregarius)),((Chettussia_caninus,Teratolepis_jacksoni),Gonocephalus_cristata)),((Grammostola_lopatini,Osmoderma_collectivus),Pandinus_rufodorsata))),((((Apus_hirundo,(((Aquila_intermedia,(Ciconia_karelini,Ovis_ignicapillus)),(Crocodylus_pugatshuki,Regulus_aeruginosus)),(Bradypodion_alpinus,Thecla_smithi))),(Chettussia_prasina,(Hyla_interiorata,Paraphysa_leucotus))),Lasiodora_subrufa),((Leiopython_baibacina,Triturus_hodgsoni),Leiurus_plathyrhychos))),sibiricus_canagica),((((((Citharacanthus_tinnunculus,Cygnopsis_picta),Dipus_morinellus),Kinosternon_scripta),((Eschrichtius_subrufa,Eurynorhynchus_leucophtalmos),Ophisops_avosetta)),((Limnodromus_placidus,Mabuya_metallica),Nyctaalus_montela)),Rhombomys_bengalensis)),Apus_tetrax),Ciconia_ferruginea),((((((Androctonus_rupestris,Oedura_constricticollis),(Leiopython_azureus,Rissa_nasicus)),Pagophila_elegans),(((((Cuora_rusticolus,Underwoodisaurus_Bernicla),Hydrochelidon_piscator),Eulabeia_monilis),Hyperoodon_arizonensis),Tryngites_hirundo)),Pandion_mysticetus),Notophthalmus_acutus)),(Odobenus_kingii,Tamias_caesius))),((Antilope_breitensteini,((Buteo_schreibersi,Melanocoryhpa_melleri),Philothamnus_viscivorus)),Mogera_troglodytes)),Aegialifes_platycephala);
+Hyperoodon_arizonensis Triturus_hodgsoni
