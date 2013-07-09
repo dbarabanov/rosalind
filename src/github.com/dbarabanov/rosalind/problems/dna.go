@@ -577,7 +577,6 @@ func distancesInTrees(filename string) (output string) {
 		}
 	}
 	return strings.Join(distances, " ")
-	//return ""
 }
 func distanceInNewickTree(tokens []string, x string, y string) string {
 	if x == y {
@@ -589,8 +588,8 @@ func distanceInNewickTree(tokens []string, x string, y string) string {
 	var peak int
 	started := false
 	var first int
-	//redundands := findredundands(tokens)
-	redundands := make(map[int]bool)
+    redundands := findredundands(tokens)
+	//redundands := make(map[int]bool)
 	for i, token := range tokens {
 		if redundands[i] == true {
 			continue

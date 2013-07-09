@@ -150,7 +150,8 @@ func TestDistancesInTrees(t *testing.T) {
 	//filename := "test_data/distancesInTrees.prod"
 	//t.Fail()
 	filename := "test_data/distancesInTrees.input"
-	var out = "1 2 3 2 3 2 3 2"
+	//var out = "1 2 3 2 3 2 3 2"
+	var out = "1 2 3 2 3 2 3 2 15"
 	//var out = "15 7 53 1 25 9 6 2 2 10 9 2 2 43 21 2 18 19 14 30 15 20 11 15 23 10 13 27 26 8 2 2 17 12 22 37 2 1 22"
 	//var out = "15 7 53 48 25 9 6 2 2 10 9 2 2 43 21 2 18 19 14 30 15 20 11 15 23 10 13 27 26 8 2 2 17 12 22 37 2 19 22"
 	if x := distancesInTrees(filename); x != out {
