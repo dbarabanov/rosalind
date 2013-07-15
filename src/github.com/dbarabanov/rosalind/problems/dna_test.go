@@ -176,11 +176,21 @@ func TestConsensusAndProfile(t *testing.T) {
 }
 
 func TestMortalRabbits(t *testing.T) {
-    var months, litter = 6, 3
+	var months, litter = 6, 3
 	//var months, litter = 91, 19 //4643613782231461846
 
 	var out = uint64(4)
 	if rabbits := mortalRabbits(months, litter); rabbits != out {
 		t.Errorf("mortalRabbits(%v, %v) = %v, want %v", months, litter, rabbits, out)
+	}
+}
+
+func TestExpectedOffsprings(t *testing.T) {
+	//var couples = []int{1, 0, 0, 1, 0, 1}
+	var couples = []int{17803,17464,18562,17580,17884,19141}
+
+	var out = 3.5
+	if offsprings := expectedOffsprings(couples); offsprings != out {
+		t.Errorf("expectedOffsprings(%v) = %v, want %v", couples, offsprings, out)
 	}
 }
