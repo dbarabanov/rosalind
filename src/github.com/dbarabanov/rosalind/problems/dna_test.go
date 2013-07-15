@@ -186,11 +186,25 @@ func TestMortalRabbits(t *testing.T) {
 }
 
 func TestExpectedOffsprings(t *testing.T) {
-	//var couples = []int{1, 0, 0, 1, 0, 1}
-	var couples = []int{17803,17464,18562,17580,17884,19141}
+	var couples = []int{1, 0, 0, 1, 0, 1}
+	//var couples = []int{17803, 17464, 18562, 17580, 17884, 19141}
 
 	var out = 3.5
 	if offsprings := expectedOffsprings(couples); offsprings != out {
 		t.Errorf("expectedOffsprings(%v) = %v, want %v", couples, offsprings, out)
+	}
+}
+
+func TestRandomStrings(t *testing.T) {
+	var s = "ACGATACAA"
+	var gc = []float64{0.129, 0.287, 0.423, 0.476, 0.641, 0.742, 0.783}
+
+	var out = []float64{-5.737, -5.217, -5.263, -5.360, -5.958, -6.628, -7.009}
+	probs := randomStrings(s, gc)
+	for i, p := range probs {
+		if p != out[i] {
+			t.Errorf("randomStrings(%v, %v) = %v, want %v", s, gc, probs, out)
+			break
+		}
 	}
 }

@@ -40,8 +40,12 @@ func Round(x float64, prec int) float64 {
 	pow := math.Pow(10, float64(prec))
 	intermed := x * pow
 	_, frac := math.Modf(intermed)
+x = .5
+    if frac < 0.0 {
+        x=-.5
+    }
 
-	if frac >= 0.5 {
+	if frac >=x {
 		rounder = math.Ceil(intermed)
 	} else {
 		rounder = math.Floor(intermed)

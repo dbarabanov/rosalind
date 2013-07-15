@@ -5,7 +5,7 @@ import (
 	"github.com/dbarabanov/rosalind/suffix_tree"
 	"github.com/dbarabanov/rosalind/util"
 	"io/ioutil"
-	//"math"
+	"math"
 	"sort"
 	"strconv"
 	"strings"
@@ -779,4 +779,30 @@ func mortalRabbits(months int, life int) (rabbits uint64) {
 //Return: The expected number of offspring displaying the dominant phenotype in the next generation, under the assumption that every couple has exactly two offspring.
 func expectedOffsprings(couples []int) (offsprings float64) {
 	return 2 * (float64(couples[0]+couples[1]+couples[2]) + 0.75*float64(couples[3]) + 0.5*float64(couples[4]))
+}
+
+//Given: A DNA string s of length at most 100 bp and an array A containing at most 20 numbers between 0 and 1.
+
+//Return: An array B having the same length as A in which B[k] represents the common logarithm of the probability that a random string constructed with the GC-content found in A[k] will match s exactly.
+
+//Sample Dataset
+
+//ACGATACAA
+//0.129 0.287 0.423 0.476 0.641 0.742 0.783
+//Sample Output
+
+//-5.737 -5.217 -5.263 -5.360 -5.958 -6.628 -7.009
+func randomStrings(s string, gcContent []float64) (probs []float64) {
+	probs = make([]float64, len(gcContent))
+	for i, gc := range gcContent {
+		for _, l := range s {
+			if l == 'C' || l == 'G' {
+				probs[i] += math.Log10(gc / 2)
+			} else {
+				probs[i] += math.Log10((1 - gc) / 2)
+			}
+		}
+		probs[i] = util.Round(probs[i], 3)
+	}
+	return probs
 }
