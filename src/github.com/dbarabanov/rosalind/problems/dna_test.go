@@ -174,3 +174,13 @@ func TestConsensusAndProfile(t *testing.T) {
 		t.Errorf("consensusAndProfile(%v) = %v, want %v.", filename, x, out)
 	}
 }
+
+func TestMortalRabbits(t *testing.T) {
+    var months, litter = 6, 3
+	//var months, litter = 91, 19 //4643613782231461846
+
+	var out = uint64(4)
+	if rabbits := mortalRabbits(months, litter); rabbits != out {
+		t.Errorf("mortalRabbits(%v, %v) = %v, want %v", months, litter, rabbits, out)
+	}
+}

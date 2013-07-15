@@ -588,7 +588,7 @@ func distanceInNewickTree(tokens []string, x string, y string) string {
 	var peak int
 	started := false
 	var first int
-    redundands := findredundands(tokens)
+	redundands := findredundands(tokens)
 	//redundands := make(map[int]bool)
 	for i, token := range tokens {
 		if redundands[i] == true {
@@ -735,4 +735,35 @@ func consensusAndProfile(filename string) (result string) {
 	//ioutil.WriteFile("test_data/consensusAndProfile.out", []byte(result), 0644)
 
 	return result
+}
+
+//Recall the definition of the Fibonacci numbers from “Rabbits and Recurrence Relations”, which followed the recurrence relation Fn=Fn−1+Fn−2 and assumed that each pair of rabbits reaches maturity in one month and produces a single pair of offspring (one male, one female) each subsequent month.
+
+//Our aim is to somehow modify this recurrence relation to achieve a dynamic programming solution in the case that all rabbits die out after a fixed number of months. See Figure 4 for a depiction of a rabbit tree in which rabbits live for three months (meaning that they reproduce only twice before dying).
+
+//Given: Positive integers n≤100 and m≤20.
+
+//Return: The total number of pairs of rabbits that will remain after the n-th month if all rabbits live for m months.
+
+//Sample Dataset
+
+//6 3
+//Sample Output
+
+//4
+func mortalRabbits(months int, life int) (rabbits uint64) {
+	deaths := make([]uint64, life)
+	newborns := make([]uint64, 0)
+	adults := make([]uint64, 0)
+
+	newborns = append(newborns, 1)
+	deaths = append(deaths, 1)
+	adults = append(adults, 0)
+	for i := 1; i < months; i++ {
+		newborns = append(newborns, adults[i-1])
+		adults = append(adults, adults[i-1]+newborns[i-1]-deaths[i])
+		deaths = append(deaths, newborns[i])
+		//fmt.Printf("generation: %v. deaths: %v, newborns: %v, adults: %v\n", i, deaths, newborns, adults)
+	}
+	return adults[months-1] + newborns[months-1]
 }
