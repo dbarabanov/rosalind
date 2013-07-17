@@ -208,3 +208,13 @@ func TestRandomStrings(t *testing.T) {
 		}
 	}
 }
+
+func TestIndependentAlleles(t *testing.T) {
+	var k, n = 2, 1
+	//var k, n = 6, 18
+	var out = 0.684
+	//var out = 0.568
+	if prob := independentAlleles(k, n); prob != out {
+		t.Errorf("independentAlleles(%v, %v) = %v, want %v", k, n, prob, out)
+	}
+}

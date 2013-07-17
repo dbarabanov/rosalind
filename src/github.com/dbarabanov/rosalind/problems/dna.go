@@ -806,3 +806,35 @@ func randomStrings(s string, gcContent []float64) (probs []float64) {
 	}
 	return probs
 }
+
+//Given: Two positive integers k (k≤7) and N (N≤2k). In this problem, we begin with Tom, who in the 0th generation has genotype Aa Bb. Tom has two children in the 1st generation, each of whom has two children, and so on. Each organism always mates with an organism having genotype Aa Bb.
+
+//Return: The probability that at least N Aa Bb organisms will belong to the k-th generation of Tom's family tree (don't count the Aa Bb mates at each level). Assume that Mendel's second law holds for the factors.
+func independentAlleles(generations int, n int) (prob float64) {
+	var result float64
+	total := int(math.Pow(2, float64(generations)))
+
+	for i := n; i <= total; i++ {
+		//fmt.Printf("i: %v. choose: %v total: %v\n", i, choose(total, i), total)
+		result += float64(choose(total, i)) * math.Pow(0.25, float64(i)) * math.Pow(0.75, float64(total-i))
+	}
+
+	return util.Round(result, 3)
+}
+
+func choose(n int, k int) (result uint64) {
+	//fails miserably for large n
+	result = 1
+	larger, smaller := k, n-k
+	if n-k > k {
+		larger, smaller = n-k, k
+	}
+	for i := larger + 1; i <= n; i++ {
+		result *= uint64(i)
+		//fmt.Printf("i: %v result: %v\n", i, result)
+	}
+	for i := 1; i <= smaller; i++ {
+		result /= uint64(i)
+	}
+	return result
+}
